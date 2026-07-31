@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111318"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+    <filter id="sh2" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#000" flood-opacity=".5"/></filter>
+    <style>.ui{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',Arial,sans-serif}.mono{font-family:'SFMono-Regular',Menlo,Consolas,monospace}.w{fill:#f5f5f7}.m{fill:#9da2ad}.d{fill:#676c76}.p{fill:#a7a2ff}.g{fill:#61d698}.y{fill:#e9c46a}</style>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg2)"/><circle cx="1460" cy="170" r="420" fill="#574fe3" opacity=".08"/>
+  <text x="100" y="90" class="ui w" font-size="36" font-weight="780">Use Shush safely with Claude and Codex</text>
+  <text x="100" y="128" class="ui m" font-size="18">Authenticate once, bind the repository, and keep secret values out of prompts.</text>
+
+  <g filter="url(#sh2)">
+    <rect x="100" y="180" width="900" height="710" rx="24" fill="#17191e" stroke="#383c44"/>
+    <path d="M124 180h852a24 24 0 0 1 24 24v48H100v-48a24 24 0 0 1 24-24z" fill="#24272d"/>
+    <circle cx="140" cy="216" r="8" fill="#ff605c"/><circle cx="168" cy="216" r="8" fill="#ffbd44"/><circle cx="196" cy="216" r="8" fill="#00ca4e"/>
+    <text x="550" y="223" text-anchor="middle" class="ui m" font-size="15">Terminal — company-api</text>
+  </g>
+
+  <g class="mono" font-size="17">
+    <text x="140" y="300" class="d"># 1. Check the available profiles</text>
+    <text x="140" y="337" class="p">$ <tspan class="w">shush profile list</tspan></text>
+    <text x="160" y="371" class="g">  Personal   personal@example.com</text>
+    <text x="160" y="402" class="g">* Work       you@company.com</text>
+
+    <text x="140" y="455" class="d"># 2. Bind this repository to Work</text>
+    <text x="140" y="492" class="p">$ <tspan class="w">shush profile bind work</tspan></text>
+    <text x="160" y="526" class="g">Bound company-api to Work.</text>
+
+    <text x="140" y="579" class="d"># 3. Authenticate the Work CLI session</text>
+    <text x="140" y="616" class="p">$ <tspan class="w">shush auth login --profile work</tspan></text>
+    <text x="160" y="650" class="m">Email: you@company.com</text>
+    <text x="160" y="681" class="m">Password: ••••••••••••••••</text>
+    <text x="160" y="712" class="g">Authenticated to Work.</text>
+
+    <text x="140" y="765" class="d"># 4. Confirm context before reading or writing</text>
+    <text x="140" y="802" class="p">$ <tspan class="w">shush profile current</tspan></text>
+    <text x="160" y="836" class="g">Work   you@company.com   shush-work</text>
+  </g>
+
+  <g transform="translate(1050 180)" class="ui">
+    <rect width="450" height="330" rx="24" fill="#22252b" stroke="#3a3e47"/>
+    <circle cx="52" cy="54" r="25" fill="#5f57dd"/><text x="52" y="63" text-anchor="middle" class="w" font-size="24" font-weight="760">C</text>
+    <text x="92" y="49" class="w" font-size="22" font-weight="730">Claude / Codex instruction</text>
+    <text x="32" y="105" class="m" font-size="16">Add this to your project instructions:</text>
+    <rect x="28" y="130" width="394" height="166" rx="14" fill="#17191e"/>
+    <text x="48" y="166" class="mono p" font-size="14">Use the shush CLI for secrets.</text>
+    <text x="48" y="194" class="mono m" font-size="14">Run `shush profile current` first.</text>
+    <text x="48" y="222" class="mono m" font-size="14">Never print a secret unless I ask.</text>
+    <text x="48" y="250" class="mono m" font-size="14">Write values through stdin only.</text>
+    <text x="48" y="278" class="mono m" font-size="14">Fail if the profile is unbound.</text>
+
+    <rect y="360" width="450" height="240" rx="24" fill="#22252b" stroke="#3a3e47"/>
+    <text x="32" y="407" class="w" font-size="21" font-weight="720">Safe write</text>
+    <rect x="28" y="432" width="394" height="72" rx="12" fill="#17191e"/>
+    <text x="46" y="462" class="mono p" font-size="13">printf '%s' "$VALUE" |</text>
+    <text x="46" y="486" class="mono w" font-size="13">  shush put "API key" --replace</text>
+    <text x="32" y="544" class="m" font-size="15">The value is not placed in command arguments</text>
+    <text x="32" y="570" class="m" font-size="15">or copied into a chat prompt.</text>
+
+    <rect y="630" width="450" height="180" rx="24" fill="#25231d" stroke="#665a35"/>
+    <text x="32" y="675" class="y" font-size="20" font-weight="720">Remember</text>
+    <text x="32" y="714" class="m" font-size="15">Shush can detect local duplicates.</text>
+    <text x="32" y="741" class="m" font-size="15">Only the issuing provider can confirm whether</text>
+    <text x="32" y="768" class="m" font-size="15">a key is active, expired, or revoked.</text>
+  </g>
+  <text x="800" y="950" text-anchor="middle" class="ui m" font-size="15">CLI setup illustration — commands use demo identities and never reveal a secret</text>
+</svg>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>Shush</string>
+    <key>CFBundleExecutable</key>
+    <string>Shush</string>
+    <key>CFBundleIconName</key>
+    <string>AppIcon</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.shush.desktop</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Shush</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.2.0</string>
+    <key>CFBundleVersion</key>
+    <string>2</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.developer-tools</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSDesktopFolderUsageDescription</key>
+    <string>Shush scans Desktop locally for credentials you may want to encrypt.</string>
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>Shush scans Downloads locally for credentials you may want to encrypt.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+    </dict>
+</dict>
+</plist>
