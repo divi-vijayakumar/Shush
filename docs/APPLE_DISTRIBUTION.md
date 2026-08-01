@@ -6,10 +6,11 @@ notarization for the normal Gatekeeper experience.
 
 ## Current Mac status
 
-This project has been tested with Xcode 26.2 and `notarytool` 1.1.0. The Mac is
-connected to Apple Developer team `3W5VSGH6UB`, but an Apple Development
+This project has been tested with Xcode 26.2 and `notarytool` 1.1.0. Shush's
+intended distribution team is `HPPYB8732L`. This Mac currently has only an
+Apple Development certificate for a different team (`3W5VSGH6UB`); that
 certificate is not sufficient for direct distribution. Install a **Developer
-ID Application** certificate before publishing.
+ID Application** certificate for `HPPYB8732L` before publishing.
 
 ## 1. Install the distribution certificate
 
@@ -27,7 +28,7 @@ security find-identity -v -p codesigning
 Look for an identity named like:
 
 ```text
-Developer ID Application: Divi Vijayakumar (3W5VSGH6UB)
+Developer ID Application: Divi Vijayakumar (HPPYB8732L)
 ```
 
 Do not use `Apple Development`, `Mac Development`, or `Mac App Distribution`
@@ -41,7 +42,7 @@ Create an app-specific password for the Apple ID, then save it in Keychain for
 ```bash
 xcrun notarytool store-credentials "shush-notary" \
   --apple-id "YOUR_APPLE_ID" \
-  --team-id "3W5VSGH6UB"
+  --team-id "HPPYB8732L"
 ```
 
 The script refers only to the Keychain profile name. Do not commit the Apple ID,
@@ -50,7 +51,7 @@ app-specific password, private key, certificate export, or API key.
 ## 3. Build, sign, and notarize
 
 ```bash
-SHUSH_SIGN_IDENTITY="Developer ID Application: Divi Vijayakumar (3W5VSGH6UB)" \
+SHUSH_SIGN_IDENTITY="Developer ID Application: Divi Vijayakumar (HPPYB8732L)" \
 SHUSH_NOTARY_PROFILE="shush-notary" \
 scripts/build-dmg.sh
 ```
