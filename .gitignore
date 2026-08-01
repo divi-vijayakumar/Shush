@@ -1,6 +1,7 @@
 .build/
 build/
 .swiftpm/
+xcuserdata/
 .DS_Store
 *.dmg
 *.dmg.sha256
