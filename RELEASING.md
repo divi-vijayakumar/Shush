@@ -20,14 +20,36 @@ scripts/integration-test.sh
 git diff --check
 ```
 
-## 3. Build the release
+## 3. Archive and distribute the app
+
+The preferred public-release workflow is:
+
+1. Open `Shush.xcodeproj`.
+2. Select the shared **Shush** scheme and **Any Mac (Apple Silicon)**.
+3. Choose **Product → Archive**.
+4. In Organizer, choose **Distribute App → Developer ID** (or **Direct
+   Distribution**) and complete Xcode's cloud-signing and notarization flow.
+5. Export the notarized `Shush.app` and retain the distribution log.
+
+The App Store Connect user must have **Cloud-Managed Developer ID Certificate
+Access**. See [`docs/APPLE_DISTRIBUTION.md`](docs/APPLE_DISTRIBUTION.md).
+
+## 4. Build the DMG
 
 ```bash
 scripts/build-dmg.sh
 ```
 
-The packaging script creates both the DMG and its SHA-256 checksum under
-`build/`.
+Package the Xcode export without rebuilding it:
+
+```bash
+SHUSH_APP_SOURCE="/path/to/export/Shush.app" \
+SHUSH_NOTARY_PROFILE="shush-notary" \
+scripts/build-dmg.sh
+```
+
+The packaging script verifies the signed app, then creates the DMG and its
+SHA-256 checksum under `build/`.
 
 Verify both the disk image and the packaged application before publishing:
 
@@ -38,9 +60,8 @@ shasum -a 256 build/Shush-0.2.0-arm64.dmg
 cat build/Shush-0.2.0-arm64.dmg.sha256
 ```
 
-For a public release, use a Developer ID Application signature and submit the
-DMG for Apple notarization. Follow the one-time setup in
-[`docs/APPLE_DISTRIBUTION.md`](docs/APPLE_DISTRIBUTION.md), then build with:
+If using the manual signing path, use a Developer ID Application signature and
+submit the DMG for Apple notarization:
 
 ```bash
 SHUSH_SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
@@ -48,7 +69,7 @@ SHUSH_NOTARY_PROFILE="shush-notary" \
 scripts/build-dmg.sh
 ```
 
-## 4. Tag and publish
+## 5. Tag and publish
 
 After committing the release source:
 

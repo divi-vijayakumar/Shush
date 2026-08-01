@@ -4,20 +4,56 @@ Public Shush builds are distributed outside the Mac App Store. Apple requires a
 Developer ID Application certificate, hardened runtime, secure timestamps, and
 notarization for the normal Gatekeeper experience.
 
-## Current Mac status
+Shush's distribution team is VELVEE, INC (`HPPYB8732L`). The shared
+`Shush.xcodeproj` is configured for automatic signing with that team. The
+recommended release path is Xcode's cloud-managed Developer ID signing; a
+Developer ID private key does not need to be downloaded to the release Mac.
 
-This project has been tested with Xcode 26.2 and `notarytool` 1.1.0. Shush's
-intended distribution team is `HPPYB8732L`. This Mac currently has only an
-Apple Development certificate for a different team (`3W5VSGH6UB`); that
-certificate is not sufficient for direct distribution. Install a **Developer
-ID Application** certificate for `HPPYB8732L` before publishing.
+## Recommended: archive and distribute with Xcode
 
-## 1. Install the distribution certificate
+### 1. Enable cloud-managed Developer ID access
 
-The Apple Developer account holder must create or download a **Developer ID
-Application** certificate using Xcode's account management or Certificates,
-Identifiers & Profiles on the Apple Developer website. The private key and
-certificate must appear together in the login keychain.
+An Account Holder must grant the releasing Admin **Cloud-Managed Developer ID
+Certificate Access** in App Store Connect under **Users and Access**. This is a
+separate permission from ordinary Certificates, Identifiers & Profiles access.
+
+### 2. Create the archive
+
+1. Open `Shush.xcodeproj` in Xcode.
+2. Select the shared **Shush** scheme and **Any Mac (Apple Silicon)** as the
+   destination.
+3. Choose **Product → Archive**.
+4. In Organizer, select the new Shush archive and choose **Distribute App**.
+5. Choose **Developer ID** (called **Direct Distribution** in some Xcode
+   versions), then follow the signing and notarization prompts.
+
+Xcode requests a cloud-managed Developer ID signature from Apple and submits
+the exported app for notarization. Keep the archive and export log with the
+release artifacts.
+
+### 3. Package the exported app as a DMG
+
+Xcode's Developer ID workflow exports a signed, notarized `Shush.app`; it does
+not reliably create the GitHub release DMG. Package that exact export without
+rebuilding or changing its signature:
+
+```bash
+SHUSH_APP_SOURCE="/path/to/export/Shush.app" \
+SHUSH_NOTARY_PROFILE="shush-notary" \
+scripts/build-dmg.sh
+```
+
+This mode verifies the exported app, creates the DMG, submits the DMG for
+notarization, staples the ticket, and writes its checksum. The outer DMG does
+not need its own code signature; the app inside retains its cloud-managed
+Developer ID signature.
+
+## Manual certificate and `notarytool` workflow
+
+Use this fallback when a local **Developer ID Application** certificate is
+available. The Account Holder can create the certificate in Certificates,
+Identifiers & Profiles. The private key and certificate must appear together
+in the login keychain.
 
 Verify it locally:
 
@@ -34,7 +70,7 @@ Developer ID Application: Divi Vijayakumar (HPPYB8732L)
 Do not use `Apple Development`, `Mac Development`, or `Mac App Distribution`
 for this DMG.
 
-## 2. Save notarization credentials
+### 1. Save notarization credentials
 
 Create an app-specific password for the Apple ID, then save it in Keychain for
 `notarytool`. Enter the password only at the secure prompt:
@@ -48,7 +84,7 @@ xcrun notarytool store-credentials "shush-notary" \
 The script refers only to the Keychain profile name. Do not commit the Apple ID,
 app-specific password, private key, certificate export, or API key.
 
-## 3. Build, sign, and notarize
+### 2. Build, sign, and notarize
 
 ```bash
 SHUSH_SIGN_IDENTITY="Developer ID Application: Divi Vijayakumar (HPPYB8732L)" \
@@ -65,7 +101,7 @@ The script:
 5. staples and validates the notarization ticket; and
 6. generates the final SHA-256 checksum after stapling.
 
-## 4. Verify before release
+## Verify before release
 
 ```bash
 codesign --verify --deep --strict --verbose=2 build/Shush.app
@@ -78,7 +114,7 @@ spctl --assess --type open --context context:primary-signature \
 Only upload the DMG and checksum after notarization reports `Accepted` and all
 verification commands succeed.
 
-## 5. Publish where users can find it
+## Publish where users can find it
 
 Attach both files to a GitHub Release:
 

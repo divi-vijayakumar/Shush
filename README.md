@@ -12,7 +12,7 @@ Shush does not require a Shush cloud account or subscription.
 [Profiles](#personal-work-and-project-profiles) ·
 [Security](SECURITY.md) · [Release history](CHANGELOG.md)
 
-**[Download the latest Shush DMG from GitHub Releases](https://github.com/divi-vijayakumar/Shush/releases/latest)**
+**[Download Shush from the GitHub Releases page](https://github.com/divi-vijayakumar/Shush/releases)**
 
 ## Why Shush if Agent Vault already has a UI?
 
@@ -297,6 +297,13 @@ swift test --disable-sandbox
 swift build -c release --disable-sandbox
 ```
 
+Or open the checked-in Xcode project and build the shared scheme:
+
+```bash
+xcodebuild -project Shush.xcodeproj -scheme Shush \
+  -destination 'platform=macOS,arch=arm64' build
+```
+
 Build the app and DMG:
 
 ```bash
@@ -315,8 +322,9 @@ release process.
 
 ## Project status and licensing
 
-Local development builds use ad-hoc signing. Public builds support Developer ID
-signing and Apple notarization through `scripts/build-dmg.sh`; see
+Local development builds use ad-hoc signing. Public builds support Xcode
+cloud-managed Developer ID signing as well as the manual `scripts/build-dmg.sh`
+notarization workflow; see
 [docs/APPLE_DISTRIBUTION.md](docs/APPLE_DISTRIBUTION.md).
 
 The bundled Agent Vault binary is covered by
