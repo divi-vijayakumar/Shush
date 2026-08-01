@@ -11,6 +11,13 @@ ICONSET_DIR="$BUILD_DIR/Shush.iconset"
 ASSET_CATALOG_DIR="$BUILD_DIR/ShushAssets.xcassets"
 DMG_STAGE="$BUILD_DIR/dmg"
 DMG_PATH="$BUILD_DIR/Shush-0.2.0-arm64.dmg"
+SIGN_IDENTITY="${SHUSH_SIGN_IDENTITY:--}"
+NOTARY_PROFILE="${SHUSH_NOTARY_PROFILE:-}"
+
+if [[ -n "$NOTARY_PROFILE" && "$SIGN_IDENTITY" == "-" ]]; then
+  echo "SHUSH_NOTARY_PROFILE requires a Developer ID Application identity in SHUSH_SIGN_IDENTITY." >&2
+  exit 1
+fi
 
 export CLANG_MODULE_CACHE_PATH="/private/tmp/shush-clang"
 export SWIFTPM_MODULECACHE_OVERRIDE="/private/tmp/shush-swiftpm"
@@ -54,8 +61,16 @@ xcrun actool \
 cp "$ROOT_DIR/Packaging/Info.plist" "$CONTENTS_DIR/Info.plist"
 printf 'APPL????' > "$CONTENTS_DIR/PkgInfo"
 
-codesign --force --deep --sign - "$APP_DIR"
-codesign --verify --deep --strict "$APP_DIR"
+if [[ "$SIGN_IDENTITY" == "-" ]]; then
+  codesign --force --sign - "$RESOURCES_DIR/agent-vault"
+  codesign --force --sign - "$RESOURCES_DIR/shush"
+  codesign --force --sign - "$APP_DIR"
+else
+  codesign --force --options runtime --timestamp --sign "$SIGN_IDENTITY" "$RESOURCES_DIR/agent-vault"
+  codesign --force --options runtime --timestamp --sign "$SIGN_IDENTITY" "$RESOURCES_DIR/shush"
+  codesign --force --options runtime --timestamp --sign "$SIGN_IDENTITY" "$APP_DIR"
+fi
+codesign --verify --deep --strict --verbose=2 "$APP_DIR"
 
 cp -R "$APP_DIR" "$DMG_STAGE/Shush.app"
 ln -s /Applications "$DMG_STAGE/Applications"
@@ -67,6 +82,19 @@ hdiutil create \
   -ov \
   -format UDZO \
   "$DMG_PATH"
+
+if [[ "$SIGN_IDENTITY" != "-" ]]; then
+  codesign --force --timestamp --sign "$SIGN_IDENTITY" "$DMG_PATH"
+  codesign --verify --strict --verbose=2 "$DMG_PATH"
+fi
+
+if [[ -n "$NOTARY_PROFILE" ]]; then
+  xcrun notarytool submit "$DMG_PATH" \
+    --keychain-profile "$NOTARY_PROFILE" \
+    --wait
+  xcrun stapler staple "$DMG_PATH"
+  xcrun stapler validate "$DMG_PATH"
+fi
 
 shasum -a 256 "$DMG_PATH" > "$DMG_PATH.sha256"
 

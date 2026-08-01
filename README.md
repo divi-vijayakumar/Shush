@@ -12,20 +12,78 @@ Shush does not require a Shush cloud account or subscription.
 [Profiles](#personal-work-and-project-profiles) ·
 [Security](SECURITY.md) · [Release history](CHANGELOG.md)
 
+**[Download the latest Shush DMG from GitHub Releases](https://github.com/divi-vijayakumar/Shush/releases/latest)**
+
+## Why Shush if Agent Vault already has a UI?
+
+[Agent Vault](https://github.com/Infisical/agent-vault) already provides a web
+management interface, CLI, multi-tenancy, and credential brokering. Shush does
+not replace those capabilities. It packages Agent Vault into a native macOS
+workflow for people who want one local place that both they and their coding
+agents can use without maintaining a paid secrets service.
+
+Shush adds a personal desktop experience around that foundation:
+
+- Drag in `.env`, JSON, certificates, and other credential files.
+- Scan Desktop and Downloads for likely keys, import them, then optionally move
+  the source download to the recoverable macOS Trash.
+- Keep up to 10 named personal and work profiles, with separate account
+  sessions and vaults.
+- Bind a project to a profile so Claude or Codex does not silently use the wrong
+  vault.
+- Let humans manage, rotate, retire, and bulk-delete values in the app while
+  agents use the authenticated `shush` CLI.
+
+It is aimed at the vibe coder who does not want keys scattered through Notes,
+downloads, shell history, or project files—and does not want another hosted
+subscription just to organize local projects.
+
+There is an important security distinction: `shush get` returns plaintext to
+the requesting local process. That makes existing coding-agent workflows easy,
+but the agent can then see the value. For higher-risk or remotely executed
+agents, use Agent Vault's brokered proxy workflow so the agent never receives
+the underlying credential.
+
+## How to use it
+
+1. Install and unlock Shush, then drag in a credential file or run **Secret
+   Sweep** to review likely keys found locally.
+2. Open the profile menu, choose **CLI Access…**, and install the bundled CLI.
+3. Bind each project to the correct profile and tell Claude or Codex to use
+   `shush` instead of asking you to paste keys:
+
+   ```bash
+   cd ~/Projects/my-app
+   shush profile bind personal
+   shush auth login
+   shush list --json
+   shush get "Stripe test key"
+   printf '%s' "$NEW_VALUE" | shush put "Stripe test key" --replace
+   ```
+
+Use this instruction with an agent:
+
+```text
+Use the shush CLI for secrets in this project. Run `shush profile current`
+before reading or writing. Never print a secret unless I explicitly request it.
+Use stdin for writes and `--replace` for rotations.
+```
+
 ## Requirements
 
 - Apple Silicon Mac
 - macOS 14 Sonoma or newer
 - About 100 MB of free disk space
 
-Shush 0.2.0 is an early local build. The downloadable app is ad-hoc signed but
-not Apple-notarized yet.
+Shush 0.2.0 is an early local build. Check the GitHub Release description to
+see whether a particular DMG is Developer ID signed and Apple-notarized.
 
 ## Install the app
 
-1. Download `Shush-0.2.0-arm64.dmg` and its `.sha256` file from the repository's
-   GitHub Releases page. The DMG is a release asset; it is intentionally not
-   committed to the source repository.
+1. Open the [repository's **Releases** page](https://github.com/divi-vijayakumar/Shush/releases)—not the **Code** download menu—and
+   expand **Assets** under the latest release. Download
+   `Shush-0.2.0-arm64.dmg` and `Shush-0.2.0-arm64.dmg.sha256`. The DMG is a
+   release asset; it is intentionally not committed to the source repository.
 2. Verify the download:
 
    ```bash
@@ -35,8 +93,9 @@ not Apple-notarized yet.
 
    The hashes must match.
 3. Open the DMG and drag `Shush.app` into Applications.
-4. Because the current build is not notarized, the first launch may require
-   Control-clicking `Shush.app`, choosing **Open**, and confirming **Open**.
+4. A Developer ID-signed and notarized release opens normally. An explicitly
+   marked development build may require Control-clicking `Shush.app`, choosing
+   **Open**, and confirming **Open**.
 5. Create the first local account and choose a vault passphrase. Save that
    passphrase in a safe place: Shush does not store or recover it.
 
@@ -256,9 +315,9 @@ release process.
 
 ## Project status and licensing
 
-Shush currently uses ad-hoc signing for local development. A polished public
-release should use Apple Developer ID signing and notarization so users can open
-the app normally without a Gatekeeper override.
+Local development builds use ad-hoc signing. Public builds support Developer ID
+signing and Apple notarization through `scripts/build-dmg.sh`; see
+[docs/APPLE_DISTRIBUTION.md](docs/APPLE_DISTRIBUTION.md).
 
 The bundled Agent Vault binary is covered by
 [`Vendor/AGENT_VAULT_LICENSE.txt`](Vendor/AGENT_VAULT_LICENSE.txt). Shush's own

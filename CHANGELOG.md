@@ -14,6 +14,7 @@ All notable user-facing changes to Shush are recorded here.
 - Added confirmed, recoverable source-file cleanup through macOS Trash.
 - Consolidated profile, account, CLI, and lock controls in the sidebar menu.
 - Added DMG checksum generation and public setup documentation.
+- Added Developer ID signing and Apple notarization support to the DMG build.
 
 ## 0.1.0
 

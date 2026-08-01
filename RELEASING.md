@@ -38,8 +38,15 @@ shasum -a 256 build/Shush-0.2.0-arm64.dmg
 cat build/Shush-0.2.0-arm64.dmg.sha256
 ```
 
-Before a general public release, replace ad-hoc signing with a Developer ID
-Application signature and submit the app or DMG for Apple notarization.
+For a public release, use a Developer ID Application signature and submit the
+DMG for Apple notarization. Follow the one-time setup in
+[`docs/APPLE_DISTRIBUTION.md`](docs/APPLE_DISTRIBUTION.md), then build with:
+
+```bash
+SHUSH_SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
+SHUSH_NOTARY_PROFILE="shush-notary" \
+scripts/build-dmg.sh
+```
 
 ## 4. Tag and publish
 
@@ -55,6 +62,9 @@ gh release create v0.2.0 \
   --title "Shush 0.2.0" \
   --notes-from-tag
 ```
+
+The DMG will appear under **Releases → Shush 0.2.0 → Assets**. It will not
+appear in GitHub's **Code → Download ZIP** menu or in the repository file list.
 
 Confirm that a clean Mac can download the DMG, verify the checksum, install the
 app, complete first-run setup, install the CLI, and replace an older version
