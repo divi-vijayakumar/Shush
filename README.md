@@ -261,5 +261,5 @@ release should use Apple Developer ID signing and notarization so users can open
 the app normally without a Gatekeeper override.
 
 The bundled Agent Vault binary is covered by
-[`Vendor/AGENT_VAULT_LICENSE.txt`](Vendor/AGENT_VAULT_LICENSE.txt). A separate
-license for Shush's own source code has not yet been selected.
+[`Vendor/AGENT_VAULT_LICENSE.txt`](Vendor/AGENT_VAULT_LICENSE.txt). Shush's own
+source code is available under the [Apache License 2.0](LICENSE).
