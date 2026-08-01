@@ -16,6 +16,7 @@ Update the version consistently in:
 
 ```bash
 swift test --disable-sandbox
+scripts/integration-test.sh
 git diff --check
 ```
 
@@ -27,6 +28,15 @@ scripts/build-dmg.sh
 
 The packaging script creates both the DMG and its SHA-256 checksum under
 `build/`.
+
+Verify both the disk image and the packaged application before publishing:
+
+```bash
+hdiutil verify build/Shush-0.2.0-arm64.dmg
+codesign --verify --deep --strict --verbose=2 build/Shush.app
+shasum -a 256 build/Shush-0.2.0-arm64.dmg
+cat build/Shush-0.2.0-arm64.dmg.sha256
+```
 
 Before a general public release, replace ad-hoc signing with a Developer ID
 Application signature and submit the app or DMG for Apple notarization.
@@ -49,3 +59,7 @@ gh release create v0.2.0 \
 Confirm that a clean Mac can download the DMG, verify the checksum, install the
 app, complete first-run setup, install the CLI, and replace an older version
 without losing `~/.agent-vault` data.
+
+After publishing, verify that the README download instructions and both setup
+images render correctly on GitHub. Keep DMG files attached to Releases rather
+than committing them to the repository.

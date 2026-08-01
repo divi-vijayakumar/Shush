@@ -7,6 +7,11 @@ CLI for Claude, Codex, and shell workflows.
 
 Shush does not require a Shush cloud account or subscription.
 
+[Install](#install-the-app) · [CLI](#install-the-cli) ·
+[Claude and Codex](#use-shush-with-claude-or-codex) ·
+[Profiles](#personal-work-and-project-profiles) ·
+[Security](SECURITY.md) · [Release history](CHANGELOG.md)
+
 ## Requirements
 
 - Apple Silicon Mac
@@ -65,6 +70,9 @@ shush list --json
 
 The CLI stores its authenticated session in macOS Keychain. The Shush app or
 local Agent Vault backend must be unlocked before the CLI can connect.
+
+For the complete walkthrough, including project bindings and agent prompts, see
+[docs/SETUP.md](docs/SETUP.md).
 
 ## Visual setup
 
@@ -145,6 +153,7 @@ delete the encrypted vault or copy secrets into another profile.
 - On-demand reveal and automatic clipboard clearing after 60 seconds
 - High-confidence local scanning for provider-prefixed credentials and private
   keys, with previously imported or ignored matches suppressed
+- Confirmed, recoverable source-file cleanup through the macOS Trash
 - Replacement history through retired encrypted values
 - Command-click and Shift-click bulk retirement or deletion
 - Local duplicate detection by normalized name and SHA-256 value fingerprint
@@ -164,6 +173,39 @@ Older items receive a fingerprint the next time they are revealed.
 
 Retiring a credential changes only its state in Shush. It does not revoke that
 credential at Stripe, GitHub, Google, or another provider.
+
+## Troubleshooting
+
+### `shush: command not found`
+
+Install the CLI from **Profile menu → CLI Access…**, then add
+`$HOME/.local/bin` to your `PATH` and open a new terminal.
+
+### The CLI cannot connect
+
+Open Shush and unlock the local vault first. Then run:
+
+```bash
+shush auth login
+shush auth status
+```
+
+### The wrong profile is active
+
+From the project directory, inspect and bind the intended profile:
+
+```bash
+shush profile current
+shush profile list
+shush profile bind work
+```
+
+### Secret Sweep finds an old download
+
+Imported and ignored matches are suppressed on later scans. Immediately after
+an import, choose **Keep File** to leave the source where it is, or choose
+**Move to Trash** to perform a recoverable cleanup. Shush never moves the file
+without confirmation.
 
 ## Security boundaries
 

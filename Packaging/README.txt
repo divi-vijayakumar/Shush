@@ -33,7 +33,9 @@ the authenticated local session token in macOS Keychain. It does not store your
 vault passphrase.
 
 Secret Sweep reads eligible files from Desktop and Downloads locally. It does
-not upload them and it does not delete source files.
+not upload them. Imported and ignored matches are suppressed on later scans.
+Source files are moved to the macOS Trash only when the user explicitly
+confirms the recoverable cleanup action.
 
 RETIREMENT
 
