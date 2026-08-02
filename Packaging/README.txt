@@ -46,4 +46,6 @@ with the provider unless a future integration explicitly reports success.
 BUILD
 
 This DMG bundles the official Infisical Agent Vault v0.39.0 arm64 release under
-its included license. Shush is ad-hoc signed for local use, not notarized.
+its included license. Official GitHub release builds of Shush.app are Developer
+ID signed and Apple-notarized; locally built development copies are ad-hoc
+signed.

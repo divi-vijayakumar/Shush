@@ -48,8 +48,11 @@ SHUSH_NOTARY_PROFILE="shush-notary" \
 scripts/build-dmg.sh
 ```
 
-The packaging script verifies the signed app, then creates the DMG and its
-SHA-256 checksum under `build/`.
+The packaging script verifies the app's Developer ID signature, stapled ticket,
+and Gatekeeper acceptance. It then creates the DMG, submits and staples the
+outer disk image, checks Gatekeeper again, and writes the SHA-256 checksum under
+`build/`. The Keychain profile authenticates the notarization submission; the
+cloud-signed app does not require a local Developer ID private key.
 
 Verify both the disk image and the packaged application before publishing:
 

@@ -44,10 +44,15 @@ mkdir -p "$DMG_STAGE"
 if [[ -n "$SOURCE_APP" ]]; then
   ditto "$SOURCE_APP" "$APP_DIR"
   codesign --verify --deep --strict --verbose=2 "$APP_DIR"
-  if ! codesign -dv --verbose=4 "$APP_DIR" 2>&1 | grep -q "^Authority=Developer ID Application:"; then
+  # Consume the complete codesign output. With `set -o pipefail`, `grep -q`
+  # can close the pipe as soon as it finds Authority, causing codesign to exit
+  # on SIGPIPE and making a valid Developer ID export look invalid.
+  if ! codesign -dv --verbose=4 "$APP_DIR" 2>&1 | grep "^Authority=Developer ID Application:" >/dev/null; then
     echo "SHUSH_APP_SOURCE is not signed with a Developer ID Application certificate." >&2
     exit 1
   fi
+  xcrun stapler validate "$APP_DIR"
+  spctl --assess --type execute --verbose=4 "$APP_DIR"
 else
   cd "$ROOT_DIR"
   swift build -c release --disable-sandbox
@@ -119,6 +124,8 @@ if [[ -n "$NOTARY_PROFILE" ]]; then
     --wait
   xcrun stapler staple "$DMG_PATH"
   xcrun stapler validate "$DMG_PATH"
+  spctl --assess --type open --context context:primary-signature \
+    --verbose=4 "$DMG_PATH"
 fi
 
 shasum -a 256 "$DMG_PATH" > "$DMG_PATH.sha256"
