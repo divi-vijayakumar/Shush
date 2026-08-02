@@ -75,8 +75,8 @@ Use stdin for writes and `--replace` for rotations.
 - macOS 14 Sonoma or newer
 - About 100 MB of free disk space
 
-Shush 0.2.0 is an early local build. Check the GitHub Release description to
-see whether a particular DMG is Developer ID signed and Apple-notarized.
+The official Shush 0.2.0 GitHub release is Developer ID signed and
+Apple-notarized.
 
 ## Install the app
 
@@ -93,9 +93,8 @@ see whether a particular DMG is Developer ID signed and Apple-notarized.
 
    The hashes must match.
 3. Open the DMG and drag `Shush.app` into Applications.
-4. A Developer ID-signed and notarized release opens normally. An explicitly
-   marked development build may require Control-clicking `Shush.app`, choosing
-   **Open**, and confirming **Open**.
+4. Open Shush normally. The official release is Developer ID signed,
+   Apple-notarized, and accepted by macOS Gatekeeper.
 5. Create the first local account and choose a vault passphrase. Save that
    passphrase in a safe place: Shush does not store or recover it.
 

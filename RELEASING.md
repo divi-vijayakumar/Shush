@@ -50,9 +50,10 @@ scripts/build-dmg.sh
 
 The packaging script verifies the app's Developer ID signature, stapled ticket,
 and Gatekeeper acceptance. It then creates the DMG, submits and staples the
-outer disk image, checks Gatekeeper again, and writes the SHA-256 checksum under
-`build/`. The Keychain profile authenticates the notarization submission; the
-cloud-signed app does not require a local Developer ID private key.
+outer disk image, and writes the SHA-256 checksum under `build/`. The Keychain
+profile authenticates the notarization submission; the cloud-signed app does
+not require a local Developer ID private key. If a local Developer ID identity
+is supplied, the script also signs and Gatekeeper-assesses the DMG itself.
 
 Verify both the disk image and the packaged application before publishing:
 

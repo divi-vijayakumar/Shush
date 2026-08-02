@@ -10,7 +10,8 @@ RESOURCES_DIR="$CONTENTS_DIR/Resources"
 ICONSET_DIR="$BUILD_DIR/Shush.iconset"
 ASSET_CATALOG_DIR="$BUILD_DIR/ShushAssets.xcassets"
 DMG_STAGE="$BUILD_DIR/dmg"
-DMG_PATH="$BUILD_DIR/Shush-0.2.0-arm64.dmg"
+DMG_FILENAME="Shush-0.2.0-arm64.dmg"
+DMG_PATH="$BUILD_DIR/$DMG_FILENAME"
 SIGN_IDENTITY="${SHUSH_SIGN_IDENTITY:--}"
 NOTARY_PROFILE="${SHUSH_NOTARY_PROFILE:-}"
 SOURCE_APP="${SHUSH_APP_SOURCE:-}"
@@ -124,11 +125,20 @@ if [[ -n "$NOTARY_PROFILE" ]]; then
     --wait
   xcrun stapler staple "$DMG_PATH"
   xcrun stapler validate "$DMG_PATH"
-  spctl --assess --type open --context context:primary-signature \
-    --verbose=4 "$DMG_PATH"
+  # Xcode's cloud-managed workflow signs the app without placing a Developer
+  # ID private key on this Mac. In that mode the DMG is notarized and stapled
+  # but intentionally unsigned; Gatekeeper is assessed against the signed app
+  # above. A manually Developer ID-signed DMG can also be assessed directly.
+  if [[ "$SIGN_IDENTITY" != "-" ]]; then
+    spctl --assess --type open --context context:primary-signature \
+      --verbose=4 "$DMG_PATH"
+  fi
 fi
 
-shasum -a 256 "$DMG_PATH" > "$DMG_PATH.sha256"
+(
+  cd "$BUILD_DIR"
+  shasum -a 256 "$DMG_FILENAME" > "$DMG_FILENAME.sha256"
+)
 
 echo "$DMG_PATH"
 echo "$DMG_PATH.sha256"

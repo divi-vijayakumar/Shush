@@ -107,12 +107,23 @@ The script:
 codesign --verify --deep --strict --verbose=2 build/Shush.app
 hdiutil verify build/Shush-0.2.0-arm64.dmg
 xcrun stapler validate build/Shush-0.2.0-arm64.dmg
+spctl --assess --type execute --verbose=4 build/Shush.app
+```
+
+For the manual certificate workflow, also verify the DMG's Developer ID
+signature and Gatekeeper assessment:
+
+```bash
+codesign --verify --strict --verbose=2 build/Shush-0.2.0-arm64.dmg
 spctl --assess --type open --context context:primary-signature \
   --verbose=4 build/Shush-0.2.0-arm64.dmg
 ```
 
-Only upload the DMG and checksum after notarization reports `Accepted` and all
-verification commands succeed.
+The Xcode cloud-managed workflow does not install a Developer ID private key on
+the Mac, so its outer DMG is unsigned but still submitted to Apple and stapled;
+the executable app inside is Developer ID signed and Gatekeeper accepted. Only
+upload the DMG and checksum after notarization reports `Accepted` and all checks
+for the selected workflow succeed.
 
 ## Publish where users can find it
 
