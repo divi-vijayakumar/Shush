@@ -7,12 +7,21 @@ CLI for Claude, Codex, and shell workflows.
 
 Shush does not require a Shush cloud account or subscription.
 
-[Install](#install-the-app) · [CLI](#install-the-cli) ·
+[Video](#see-shush-in-action) · [Install](#install-the-app) · [CLI](#install-the-cli) ·
 [Claude and Codex](#use-shush-with-claude-or-codex) ·
 [Profiles](#personal-work-and-project-profiles) ·
 [Security](SECURITY.md) · [Release history](CHANGELOG.md)
 
 **[Download Shush from the GitHub Releases page](https://github.com/divi-vijayakumar/Shush/releases)**
+
+## See Shush in action
+
+[![Watch the 22-second Shush product tour](docs/media/shush-launch-poster.jpg)](docs/media/shush-launch.mp4)
+
+**[Watch the full 22-second product tour →](docs/media/shush-launch.mp4)**
+
+The tour uses fictional demo secrets and shows Shush's drag-and-drop import,
+local Secret Sweep, profile binding, and authenticated CLI workflow.
 
 ## Why Shush if Agent Vault already has a UI?
 
